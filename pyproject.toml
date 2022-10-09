@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "school"
+version = "0.1.0"
+description = "Helper for the Director, teachers, cashiers, to count the salary, and make announcements."
+authors = ["gealit <gealit0369@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+Django = "^4.1.2"
+django-dotenv = "^1.4.2"
+psycopg2-binary = "^2.9.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
