@@ -36,10 +36,13 @@ class User(AbstractUser):
 
     base_role = Role.TEACHER
     admin_role = Role.ADMIN
+    accountant_role = Role.ACCOUNTANT
 
     role = models.CharField(max_length=20, choices=Role.choices)
 
     def save(self, *args, **kwargs):
+        slug = f'{slugify(self.last_name)}-{slugify(self.first_name)}'
+        self.slug = slug
         if self.is_superuser:
             self.role = self.admin_role
             return super().save(*args, **kwargs)
@@ -69,6 +72,12 @@ class Admin(User):
         ordering = ('last_name',)
         verbose_name_plural = 'Администраторы'
         verbose_name = 'Администратор'
+
+
+@receiver(pre_save, sender=Admin)
+def create_update_for_admin(sender, instance, *args, **kwargs):
+    instance.is_superuser = True
+    instance.is_staff = True
 
 
 # ----- Accountant account -----
@@ -107,9 +116,3 @@ class Teacher(User):
         ordering = ('last_name',)
         verbose_name_plural = 'Учителя'
         verbose_name = 'Учитель'
-
-
-@receiver(pre_save, sender=Teacher)
-def create_slug_for_teacher(sender, instance, *args, **kwargs):
-    slug = f'{slugify(instance.last_name)}-{slugify(instance.first_name)}'
-    instance.slug = slug

@@ -1,0 +1,12 @@
+<a href="{% url 'register_teacher' %}">Создать преподавателя</a>
+
+{% for user in object_list %}
+
+    {% if user.role == 'ADMIN' %}
+        <a href="{% url 'admin_update' user.slug %}">{{ user }} - {{ user.role }}</a><br>
+    {% elif user.role == 'ACCOUNTANT' %}
+        <a href="{% url 'accountant_update' user.slug %}">{{ user }} - {{ user.role }}</a><br>
+    {% else %}
+        <a href="{% url 'teacher_update' user.slug %}">{{ user }} - {{ user.role }}</a><br>
+    {% endif %}
+{% endfor %}
