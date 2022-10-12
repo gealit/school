@@ -20,7 +20,7 @@ class Subject(models.Model):
 
 class User(AbstractUser):
     subject = models.ManyToManyField(
-        Subject, blank=True, null=True,
+        Subject, blank=True,
         related_name='subjects', verbose_name='Предмет'
     )
     salary = models.IntegerField('Зарплата', default=0)

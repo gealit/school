@@ -23,14 +23,14 @@ class RegisterForm(forms.ModelForm):
 
     def clean_username(self):
         username = self.cleaned_data['username'].lower()
-        users = User.objects.filter(username=username)
+        users = Teacher.objects.filter(username=username)
         if users.count():
             raise forms.ValidationError('Пользователь с таким именем уже существует.')
         return username
 
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
-        if User.objects.filter(email=email).exists():
+        if Teacher.objects.filter(email=email).exists():
             raise forms.ValidationError('Введите другую почту, данная почта занята.')
         return email
 
@@ -60,5 +60,5 @@ class RegisterForm(forms.ModelForm):
             {'class': 'form-control', 'placeholder': 'Пароль'}
         )
         self.fields['password2'].widget.attrs.update(
-            {'class': 'form-control', 'placeholder': 'Repeat Password'}
+            {'class': 'form-control', 'placeholder': 'Повторите пароль'}
         )

@@ -1,0 +1,5 @@
+{% for item in object_list %}
+    {{ item.title }}
+    {% if item.image %}<img src="{{ item.image.url }}">{% endif %}
+    {{ item.text }}<br>
+{% endfor %}
