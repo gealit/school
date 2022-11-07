@@ -7,7 +7,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 DEBUG = os.environ.get('DEBUG') == '1'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.environ.get('HOST', '127.0.0.1')]
 
 INSTALLED_APPS = [
     'django.contrib.admin',

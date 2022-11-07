@@ -11,8 +11,8 @@ admin.site.site_title = f"Администрирование {settings.COMPANY}"
 admin.site.index_title = f"Добро пожаловать на сервис {settings.COMPANY}"
 
 urlpatterns = [
-    path('', include('board.urls')),
-    path('user/', include('accounts.urls')),
+    path('', include('board.urls', namespace='board')),
+    path('user/', include('accounts.urls', namespace='account')),
     path('admin/', admin.site.urls),
     path('login/', LoginPage.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),

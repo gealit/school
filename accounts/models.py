@@ -27,12 +27,16 @@ class User(AbstractUser):
     description = models.TextField(blank=True, verbose_name='О себе')
     have_earned = models.IntegerField('Всего заработано', default=0)
     have_received = models.IntegerField('Получено на руки', default=0)
+    about = models.TextField(verbose_name='О себе', blank=True, null=True)
+    foto = models.ImageField(
+        upload_to='users_foto', blank=True, null=True, verbose_name='Фото'
+    )
     slug = models.SlugField(max_length=30, null=True, blank=True)
 
     class Role(models.TextChoices):
-        ADMIN = 'ADMIN', 'Admin'
-        ACCOUNTANT = 'ACCOUNTANT', 'Accountant'
-        TEACHER = 'TEACHER', 'Teacher'
+        ADMIN = 'ADMIN', 'Администратор'
+        ACCOUNTANT = 'ACCOUNTANT', 'Бухгалтер'
+        TEACHER = 'TEACHER', 'Преподаватель'
 
     base_role = Role.TEACHER
     admin_role = Role.ADMIN

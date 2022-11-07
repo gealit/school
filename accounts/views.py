@@ -1,17 +1,18 @@
-# from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, UpdateView, FormView
 
-from accounts.forms import RegisterForm
+from accounts.forms import RegisterForm, CustomLoginForm, EditProfileForm, CustomPasswordChangeForm
 from accounts.models import User, Admin, Accountant, Teacher
 
 
 class LoginPage(LoginView):
     template_name = 'accounts/login.html'
+    form_class = CustomLoginForm
     redirect_authenticated_user = True
     next_page = '/'
 
@@ -20,11 +21,18 @@ class UsersListView(LoginRequiredMixin, ListView):
     model = User
     template_name = 'accounts/users_list.html'
 
+    def get_context_data(self, **kwargs):
+        kwargs = super().get_context_data(**kwargs)
+        kwargs['admins'] = Admin.director.all()
+        kwargs['accountants'] = Accountant.accountant.all()
+        kwargs['teachers'] = Teacher.teacher.all()
+        return kwargs
+
 
 class RegisterPage(LoginRequiredMixin, FormView):
     template_name = 'accounts/register_teacher.html'
     form_class = RegisterForm
-    success_url = reverse_lazy('register_teacher')
+    success_url = reverse_lazy('account:users_list')
 
     def form_valid(self, form):
         user = form.save()
@@ -34,41 +42,61 @@ class RegisterPage(LoginRequiredMixin, FormView):
         user.save()
         messages.success(self.request, f'Пользователь {user} зарегистрирован!')
         if user is not None:
-            return redirect('register_teacher')
+            return redirect('account:users_list')
         return super(RegisterPage, self).form_valid(form)
-
-
-# def activate(request, uidb64, token):
-#     try:
-#         uid = force_str(urlsafe_base64_decode(uidb64))
-#         user = Account.objects.get(pk=uid)
-#     except(TypeError, ValueError, OverflowError, Account.DoesNotExist):
-#         user = None
-#     if user is not None and account_activation_token.check_token(user, token):
-#         user.is_active = True
-#         user.save()
-#         login(request, user)
-#         return redirect('login', permanent=True)
-#     else:
-#         return render(request, 'account/activation_invalid.html')
 
 
 class AdministratorUpdateView(LoginRequiredMixin, UpdateView):
     model = Admin
     fields = ('username', 'first_name', 'last_name', 'email', 'is_active')
     template_name = 'accounts/admin_update.html'
-    success_url = reverse_lazy('users_list')
+    success_url = reverse_lazy('board:board')
 
 
 class AccountantUpdateView(LoginRequiredMixin, UpdateView):
     model = Accountant
     fields = ('username', 'first_name', 'last_name', 'email', 'is_active')
     template_name = 'accounts/accountant_update.html'
-    success_url = reverse_lazy('users_list')
+    success_url = reverse_lazy('board:board')
 
 
 class TeacherUpdateView(LoginRequiredMixin, UpdateView):
     model = Teacher
     fields = ('username', 'first_name', 'last_name', 'email', 'subject', 'salary', 'is_active')
     template_name = 'accounts/teacher_update.html'
-    success_url = reverse_lazy('users_list')
+    success_url = reverse_lazy('board:board')
+
+
+class EditProfileView(LoginRequiredMixin, UpdateView):
+    """The View for the ability to change personal user's data"""
+    model = User
+    form_class = EditProfileForm
+    template_name = 'accounts/edit_profile.html'
+    success_url = reverse_lazy('board:board')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Ваш профиль успешно изменен!')
+        return super().form_valid(form)
+
+    def get_object(self, queryset=None):
+        """ Hook to ensure object is owned by request.user. """
+        obj = super(EditProfileView, self).get_object()
+        if not obj.id == self.request.user.id:
+            raise Http404
+        return obj
+
+    def get_queryset(self):
+        """ Limit a User to only modifying their own data. """
+        queryset = super(EditProfileView, self).get_queryset()
+        return queryset.filter(id=self.request.user.id)
+
+
+class CustomPasswordChangeView(PasswordChangeView):
+    """Little changed PasswordChangeView because were added css classes"""
+    template_name = 'accounts/change_password.html'
+    form_class = CustomPasswordChangeForm
+    success_url = reverse_lazy('board:board')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Ваш пароль изменен успешно!')
+        return super().form_valid(form)

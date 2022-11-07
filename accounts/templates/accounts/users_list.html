@@ -1,11 +1,68 @@
-<a href="{% url 'register_teacher' %}">Создать преподавателя</a>
-<br>
-{% for user in object_list %}
-    {% if user.role == 'ADMIN' %}
-        <a href="{% url 'admin_update' user.slug %}">{{ user }} - {{ user.role }}</a><br>
-    {% elif user.role == 'ACCOUNTANT' %}
-        <a href="{% url 'accountant_update' user.slug %}">{{ user }} - {{ user.role }}</a><br>
-    {% else %}
-        <a href="{% url 'teacher_update' user.slug %}">{{ user }} - {{ user.role }}</a><br>
-    {% endif %}
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="nav nav-pills nav-justified">
+        <a class="nav-link" href="{% url 'account:register_teacher' %}">
+            <p class="nav-item"><button type="button" class="btn btn-secondary btn-lg">Создать Бухгалтера</button></p>
+        </a>
+
+        <a class="nav-link" href="{% url 'account:register_teacher' %}">
+            <p class="nav-item"><button type="button" class="btn btn-secondary btn-lg">Создать Преподавателя</button></p>
+        </a>
+
+        <a class="nav-link" href="{% url 'account:register_teacher' %}">
+            <p class="nav-item"><button type="button" class="btn btn-secondary btn-lg">Создать Администратора</button></p>
+        </a>
+    </div>
+
+<div class="accordion" id="accordionPanelsStayOpenExample">
+{% for user in admins %}
+        <div class="accordion-item">
+        <h2 class="accordion-header" id="panelsStayOpen-heading{{ user.slug }}">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{ user.slug }}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{{ user.slug }}">
+        {{ user }} - {{ user.get_role_display }}
+        </button>
+        </h2>
+        <div id="panelsStayOpen-collapse{{ user.slug }}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading{{ user.slug }}">
+          <div class="accordion-body">
+              <a class="link" href="{% url 'account:admin_update' user.slug %}"><strong>{{ user }}</strong></a> {{ user.about }}
+          </div>
+        </div>
+        </div>
 {% endfor %}
+</div>
+    <br>
+<div class="accordion" id="accordionPanelsStayOpenExample">
+{% for user in accountants %}
+        <div class="accordion-item">
+        <h2 class="accordion-header" id="panelsStayOpen-heading{{ user.slug }}">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{ user.slug }}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{{ user.slug }}">
+        {{ user }} - {{ user.get_role_display }}
+        </button>
+        </h2>
+        <div id="panelsStayOpen-collapse{{ user.slug }}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading{{ user.slug }}">
+          <div class="accordion-body">
+              <a class="link" href="{% url 'account:accountant_update' user.slug %}"><strong>{{ user }}</strong></a> {{ user.about }}
+          </div>
+        </div>
+        </div>
+{% endfor %}
+</div>
+    <br>
+<div class="accordion" id="accordionPanelsStayOpenExample">
+{% for user in teachers %}
+        <div class="accordion-item">
+        <h2 class="accordion-header" id="panelsStayOpen-heading{{ user.slug }}">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapse{{ user.slug }}" aria-expanded="true" aria-controls="panelsStayOpen-collapse{{ user.slug }}">
+        {{ user }} - {{ user.get_role_display }}
+        </button>
+        </h2>
+        <div id="panelsStayOpen-collapse{{ user.slug }}" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-heading{{ user.slug }}">
+          <div class="accordion-body">
+              <a class="link" href="{% url 'account:teacher_update' user.slug %}"><strong>{{ user }}</strong></a> {{ user.about }}
+          </div>
+        </div>
+        </div>
+{% endfor %}
+</div>
+{% endblock content %}
