@@ -6,7 +6,8 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, UpdateView, FormView
 
-from accounts.forms import RegisterForm, CustomLoginForm, EditProfileForm, CustomPasswordChangeForm
+from accounts.forms import TeacherRegisterForm, CustomLoginForm, EditProfileForm, CustomPasswordChangeForm, \
+    AdminRegisterForm, AccountantRegisterForm
 from accounts.models import User, Admin, Accountant, Teacher
 
 
@@ -31,7 +32,7 @@ class UsersListView(LoginRequiredMixin, ListView):
 
 class RegisterPage(LoginRequiredMixin, FormView):
     template_name = 'accounts/register_teacher.html'
-    form_class = RegisterForm
+    form_class = TeacherRegisterForm
     success_url = reverse_lazy('account:users_list')
 
     def form_valid(self, form):
@@ -44,6 +45,16 @@ class RegisterPage(LoginRequiredMixin, FormView):
         if user is not None:
             return redirect('account:users_list')
         return super(RegisterPage, self).form_valid(form)
+
+
+class AdminRegisterPage(RegisterPage):
+    template_name = 'accounts/register_admin.html'
+    form_class = AdminRegisterForm
+
+
+class AccountantRegisterPage(RegisterPage):
+    template_name = 'accounts/register_accountant.html'
+    form_class = AccountantRegisterForm
 
 
 class AdministratorUpdateView(LoginRequiredMixin, UpdateView):

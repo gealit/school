@@ -11,24 +11,28 @@
         <li class="nav-item">
           <a class="nav-link {% if '/' == request.path %}active{% endif %}" aria-current="page" href="{% url 'board:board' %}">Доска объявлений</a>
         </li>
-{#        <li class="nav-item">#}
-{#          <a class="nav-link {% if 'board_create' in request.path %}active{% endif %}" href="{% url 'board:board_create' %}">Добавить пост</a>#}
-{#        </li>#}
         <li class="nav-item">
-          <a class="nav-link {% if 'users' in request.path %}active{% endif %}" href="{% url 'account:users_list' %}">Пользователи</a>
+          <a class="nav-link {% if 'board_create' in request.path %}active{% endif %}" href="{% url 'board:board_create' %}">Добавить пост</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if 'user' in request.path %}active{% endif %}" href="{% url 'account:users_list' %}">Пользователи</a>
         </li>
         {% if 'post_detail' in request.path %}
             <li class="nav-item">
-              <a class="nav-link active" href="{% url 'post_detail' post.id %}">{{ post.title }}</a>
+              <a class="nav-link active" href="{% url 'board:post_detail' post.id %}">{{ post.title }}</a>
             </li>
         {% endif %}
         {% endif %}
       </ul>
       {% if request.user.is_authenticated %}
       <ul class="navbar-nav">
+        Добро пожаловать!
+      </ul>
+      <ul class="navbar-nav">
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Добро пожаловать! {{ request.user.get_full_name }}
+            <img style="display: inline-block; width: 50px; height: 50px; margin: 0 auto; border-radius: 50%; object-fit: cover;" src="{{ request.user.foto.url }}">
+            {{ request.user.get_full_name }}
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{% url 'account:edit_profile' request.user.slug %}">Редактировать профиль</a></li>

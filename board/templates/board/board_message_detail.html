@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{#{% load static %}#}
+{% block content %}
+    <div class="card mb-3">
+    {% if post.image %}
+        <a href="{{ post.image.url }}">
+            <img src="{{ post.image.url }}" class="card-img-top" alt="Картинка">
+        </a>
+    {% endif %}
+        <div class="card-header text-center"><h2>{{ post.title }}</h2></div>
+        <div class="card-body">
+            <h5 class="card-title">
+                Автор: <img style="display: inline-block; width: 50px; height: 50px; margin: 0 auto; border-radius: 50%; object-fit: cover;" src="{{ post.author.foto.url }}">
+                {{ post.author.get_full_name }}
+            </h5>
+            <p class="card-text"><small class="text-muted">Добавлено {{ post.date_added }}</small></p>
+            <p class="card-text">{{ post.text }}</p>
+
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            Комментарии {% if not post.post_comments.all.count %}отсутствуют, будьте первым!{% endif %}
+        </div>
+        {% for comment in post.post_comments.all %}
+            {% include 'board/partial/comment_detail.html' %}
+        {% endfor %}
+        <div class="card" style="margin: 10px;">
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-secondary" type="submit">Добавить комментарий</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

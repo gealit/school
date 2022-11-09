@@ -1,0 +1,24 @@
+<div hx-target="this" hx-swap="outerHTML">
+    <div class="card" style="margin: 10px;">
+        <div class="card-body">
+            <div class="d-flex">
+                <h5 class="card-title">
+                    <img style="display: inline-block; width: 50px; height: 50px; margin: 0 auto; border-radius: 50%; object-fit: cover;" src="{{ comment.author.foto.url }}">
+                    {{ comment.author.get_full_name }}
+                </h5>
+                {% if request.user == comment.author %}
+                <div class="d-flex ms-auto text-center">
+                    <button hx-target="#commentform{{ comment.id }}" class="text-nowrap" style="margin-right: 20px" hx-get="{% url 'board:edit_comment' comment.id %}" hx-swap="outerHTML">
+                       Редактировать &#9998;
+                    </button>
+                    <button type="submit" class="btn-close" hx-post="{% url 'board:comment_delete' comment.id %}"></button>
+                </div>
+                {% endif %}
+            </div>
+            <p class="card-text"><small class="text-muted">Добавлено {{ comment.date_added }}</small></p>
+            <div id="commentform{{ comment.id }}">
+                <p class="card-text">{{ comment.text }}</p>
+            </div>
+        </div>
+    </div>
+</div>

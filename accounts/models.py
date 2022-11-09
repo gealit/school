@@ -1,3 +1,7 @@
+import os
+
+from PIL import Image
+from django.conf import settings
 from django.db import models
 from django.db.models.signals import pre_save
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -18,6 +22,15 @@ class Subject(models.Model):
         return self.name
 
 
+def user_directory_path(instance, filename):
+    profile_pic_name = 'user_{0}/profile.png'.format(instance.id)
+    full_path = os.path.join(settings.MEDIA_ROOT, profile_pic_name)
+    if os.path.exists(full_path):
+        os.remove(full_path)
+
+    return profile_pic_name
+
+
 class User(AbstractUser):
     subject = models.ManyToManyField(
         Subject, blank=True,
@@ -29,7 +42,7 @@ class User(AbstractUser):
     have_received = models.IntegerField('Получено на руки', default=0)
     about = models.TextField(verbose_name='О себе', blank=True, null=True)
     foto = models.ImageField(
-        upload_to='users_foto', blank=True, null=True, verbose_name='Фото'
+        upload_to=user_directory_path, default='default-profile-img.jpg', verbose_name='Фото'
     )
     slug = models.SlugField(max_length=30, null=True, blank=True)
 
@@ -47,13 +60,22 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         slug = f'{slugify(self.last_name)}-{slugify(self.first_name)}'
         self.slug = slug
-        if self.is_superuser:
-            self.role = self.admin_role
-            return super().save(*args, **kwargs)
         if not self.pk:
             self.role = self.base_role
             return super().save(*args, **kwargs)
+        super().save(*args, **kwargs)
+        self.resize_image()
+        if self.is_superuser:
+            self.role = self.admin_role
+            return super().save(*args, **kwargs)
         return super().save(*args, **kwargs)
+
+    def resize_image(self):
+        if self.foto:
+            img = Image.open(self.foto.path)
+            output_size = (300, 300)
+            img.thumbnail(output_size, Image.LANCZOS)
+            img.save(self.foto.path)
 
     def __str__(self):
         return f'{self.last_name} {self.first_name}'

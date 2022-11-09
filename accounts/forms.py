@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 
-from accounts.models import Teacher, User
+from accounts.models import Teacher, User, Accountant, Admin
 
 
 class CustomLoginForm(AuthenticationForm):
@@ -15,19 +15,7 @@ class CustomLoginForm(AuthenticationForm):
         )
 
 
-class RegisterForm(forms.ModelForm):
-    username = forms.CharField(
-        label='Имя пользователя для входа', min_length=3, max_length=30, help_text='Required'
-    )
-    first_name = forms.CharField(label='Имя', help_text='Required')
-    last_name = forms.CharField(label='Фамилия', help_text='Required')
-    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Повторите пароль', widget=forms.PasswordInput)
-
-    class Meta:
-        model = Teacher
-        fields = ('username',)
-
+class CustomRegisterMeta:
     def clean_username(self):
         username = self.cleaned_data['username'].lower()
         users = Teacher.objects.filter(username=username)
@@ -61,6 +49,32 @@ class RegisterForm(forms.ModelForm):
         )
 
 
+class TeacherRegisterForm(forms.ModelForm):
+    username = forms.CharField(
+        label='Имя пользователя для входа', min_length=3, max_length=30, help_text='Required'
+    )
+    first_name = forms.CharField(label='Имя', help_text='Required')
+    last_name = forms.CharField(label='Фамилия', help_text='Required')
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Повторите пароль', widget=forms.PasswordInput)
+
+    class Meta(CustomRegisterMeta):
+        model = Teacher
+        fields = ('username',)
+
+
+class AccountantRegisterForm(TeacherRegisterForm):
+    class Meta(CustomRegisterMeta):
+        model = Accountant
+        fields = ('username',)
+
+
+class AdminRegisterForm(TeacherRegisterForm):
+    class Meta(CustomRegisterMeta):
+        model = Admin
+        fields = ('username',)
+
+
 class EditProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
@@ -69,7 +83,7 @@ class EditProfileForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'about', 'foto')
+        fields = ('username', 'first_name', 'last_name', 'email', 'about', 'foto')
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):
