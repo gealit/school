@@ -4,11 +4,11 @@ from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.http import Http404
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, UpdateView, FormView
+from django.views.generic import ListView, UpdateView, FormView, CreateView
 
 from accounts.forms import TeacherRegisterForm, CustomLoginForm, EditProfileForm, CustomPasswordChangeForm, \
     AdminRegisterForm, AccountantRegisterForm
-from accounts.models import User, Admin, Accountant, Teacher
+from accounts.models import User, Admin, Accountant, Teacher, Subject
 
 
 class LoginPage(LoginView):
@@ -102,7 +102,7 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         return queryset.filter(id=self.request.user.id)
 
 
-class CustomPasswordChangeView(PasswordChangeView):
+class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     """Little changed PasswordChangeView because were added css classes"""
     template_name = 'accounts/change_password.html'
     form_class = CustomPasswordChangeForm
@@ -111,3 +111,15 @@ class CustomPasswordChangeView(PasswordChangeView):
     def form_valid(self, form):
         messages.success(self.request, 'Ваш пароль изменен успешно!')
         return super().form_valid(form)
+
+
+class SubjectListView(LoginRequiredMixin, ListView):
+    model = Subject
+    template_name = 'accounts/subjects.html'
+
+
+class SubjectCreateView(LoginRequiredMixin, CreateView):
+    model = Subject
+    fields = '__all__'
+    template_name = 'accounts/create_subject.html'
+    success_url = reverse_lazy('subjects')

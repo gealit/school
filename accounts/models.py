@@ -22,7 +22,7 @@ class Subject(models.Model):
         return self.name
 
 
-def user_directory_path(instance, filename):
+def user_directory_path(instance):
     profile_pic_name = 'user_{0}/profile.png'.format(instance.id)
     full_path = os.path.join(settings.MEDIA_ROOT, profile_pic_name)
     if os.path.exists(full_path):
@@ -42,7 +42,9 @@ class User(AbstractUser):
     have_received = models.IntegerField('Получено на руки', default=0)
     about = models.TextField(verbose_name='О себе', blank=True, null=True)
     foto = models.ImageField(
-        upload_to=user_directory_path, default='default-profile-img.jpg', verbose_name='Фото'
+        upload_to=user_directory_path,
+        default='default-profile-img.jpg',
+        verbose_name='Фото'
     )
     slug = models.SlugField(max_length=30, null=True, blank=True)
 

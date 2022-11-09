@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 
-from accounts.views import LoginPage
+from accounts.views import LoginPage, SubjectListView, SubjectCreateView
 
 admin.site.site_header = f"Администрирование {settings.COMPANY}"
 admin.site.site_title = f"Администрирование {settings.COMPANY}"
@@ -16,6 +16,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', LoginPage.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page='login'), name='logout'),
+    path('subject/', SubjectListView.as_view(), name='subjects'),
+    path('subject/create/', SubjectCreateView.as_view(), name='subject_create'),
 ]
 
 

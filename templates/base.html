@@ -3,14 +3,14 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+{#    <meta name="viewport" content="width=device-width, initial-scale=1">#}
     <link rel="icon" href="{% static 'img/fav/favicon.ico' %}" type="image">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/fav/apple-touch-icon.png' %}">
     <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/fav/favicon-32x32.png' %}">
     <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/fav/favicon-16x16.png' %}">
-    <link href="{% static 'css/bs.css' %}" rel="stylesheet" >
-    <script src="{% static 'js/htmx.js' %}"></script>
-    <link href="{% static 'css/style.css' %}" rel="stylesheet" >
+    <link href="{% static 'css/bs.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
     <title>Neshkola</title>
   </head>
   <body>
@@ -33,6 +33,7 @@
 
       {% include 'includes/footer.html' %}
     </div>
+    <script src="{% static 'js/htmx.js' %}"></script>
     <script>
         document.body.addEventListener('htmx:configRequest', (event) => {
             event.detail.headers['X-CSRFToken'] = '{{ csrf_token }}';

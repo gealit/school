@@ -19,7 +19,7 @@
         <div class="col-md-8">
           <div class="card-body">
             <h5 class="card-title">{{ item.title }}</h5>
-            <p class="card-text"><small class="text-muted">Автор: {{ item.author.get_full_name }} - {{ item.date_added }} {% if item.date_added != item.date_updated %} (обновлено: {{ item.date_updated }}) {% endif %}</small></p>
+            <p class="card-text"><small class="text-muted">Автор: <img class="profile-pic-nav pic-min" src="{{ item.author.foto.url }}"> {{ item.author.get_full_name }} - {{ item.date_added }} {% if item.date_added != item.date_updated %} (обновлено: {{ item.date_updated }}) {% endif %}</small></p>
             <p class="card-text">{{ item.text|safe }}</p>
             <p class="card-text"><small class="text-muted">Комментарии [{{ item.post_comments.all.count }}]</small></p>
             <p class="card-text"><a href="{% url 'board:post_detail' item.id %}"><button class="btn btn-secondary">Заглянуть в пост и комментарии</button></a></p>
