@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="profile-nav col-md-3">
+        <div class="panel">
+          <div class="user-heading round">
+              <a href="#">
+                  <img src="{{ teacher.foto.url }}" alt="Фото">
+              </a>
+              <h1>{{ teacher.get_full_name }}</h1>
+              <p>{{ teacher.email }}</p>
+          </div>
+        </div>
+    </div>
+    <div class="profile-info col-md-9">
+      <div class="panel">
+          немного информации
+      </div>
+      <div class="panel">
+          <div class="bio-graph-heading">
+              {{ teacher.about }}
+          </div>
+          <div class="panel-body bio-graph-info">
+              <h1>немного информации</h1>
+              <div class="row">
+                  <div class="bio-row">
+                      <p><span>Имя </span>: {{ teacher.first_name }}</p>
+                  </div>
+                  <div class="bio-row">
+                      <p><span>Фамилия </span>: {{ teacher.last_name }}</p>
+                  </div>
+                  <div class="bio-row">
+                      <p><span>Предметы </span>:
+                          {% for subject in teacher.subject.all %}
+                            <span class="badge bg-secondary">{{ subject }}</span>
+                          {% endfor %}
+                      </p>
+                  </div>
+                  <div class="bio-row">
+                      <p><span>Зарплата </span>: <span class="badge bg-secondary">{{ teacher.salary }}</span> руб. за урок.</p>
+                  </div>
+                  <div class="bio-row">
+                      <p><span>Уроков за {% now 'F' %} </span>: <span class="badge bg-secondary">{{ lessons }}</span></p>
+                  </div>
+
+                  <div class="bio-row">
+                      <p><span>Заработано за {% now 'F' %} </span>: <span class="badge bg-secondary">{{ sal }}</span> руб.</p>
+                  </div>
+                  <div class="bio-row">
+                      <p><span>Телефон </span>: (777) 034 5678</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </div>
+</div>
+    <hr>
+
+    <div class="container px-4 text-center">
+    <h5>Всего заработано: <span class="badge bg-secondary">{{ teacher.have_earned }}</span>.
+        Вы получили: <span class="badge bg-secondary">{{ teacher.have_received }}</span>.
+    </h5>
+    </div>
+
+
+<div class="container px-4 text-center">
+    <div class="row row-cols-1 row-cols-md-5 g-4">
+
+    {% for item in filter.qs %}
+        <div class="col">
+            <div class="card text-bg-light mb-3" style="max-width: 18rem;">
+                <div class="card-header">Дата: {{ item.date }}</div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.teacher.first_name|capfirst }} {{ item.teacher.last_name|capfirst }}</h5>
+                    <p class="card-text">
+                        {% if request.user == item.teacher %}
+                            <a href="{% url 'work_hours:update_work_hours' item.school.slug item.date %}">
+                                Урок № {{ item.lesson.number }}<br>
+                                Время: {{ item.lesson }}
+                            </a>
+                        {% endif %}
+                    </p>
+                    <p class="card-text">
+                        Предмет: {{ item.subject }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    </div>
+</div>
+
+
+
+
+
+
+
+{% endblock content %}

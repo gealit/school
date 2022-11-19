@@ -14,7 +14,7 @@
                 {{ post.author.get_full_name }}
             </h5>
             <p class="card-text"><small class="text-muted">Добавлено {{ post.date_added }}</small></p>
-            <p class="card-text">{{ post.text }}</p>
+            <p class="card-text">{{ post.text|linebreaks }}</p>
 
         </div>
     </div>

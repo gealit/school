@@ -7,7 +7,11 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 DEBUG = os.environ.get('DEBUG') == '1'
 
-ALLOWED_HOSTS = [os.environ.get('HOST', '127.0.0.1'), os.environ.get('HOST2', '127.0.0.1')]
+ALLOWED_HOSTS = [
+    os.environ.get('HOST', '127.0.0.1'),
+    os.environ.get('HOST2', '127.0.0.1'),
+    os.environ.get('HOST3', '127.0.0.1'),
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -18,6 +22,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts.apps.AccountsConfig',
     'board.apps.BoardConfig',
+    'work_hours.apps.WorkHoursConfig',
+    'schedule.apps.ScheduleConfig',
+    'import_export',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

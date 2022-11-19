@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<form action="" method="post" enctype="multipart/form-data">
+    <br>
+    <h4>Выберете урок, который Вы хотите добавить. {{ date }} - {{ school }}</h4>
+    {% csrf_token %}
+    <br>
+    {{ form.grade }}
+    <br>
+    {{ form.lesson }}
+    <br>
+    {{ form.subject }}
+    <br>
+    <button type="submit" value="Update events" class="btn btn-primary w-100 mb-3">Добавить Урок</button>
+</form>
+
+<div class="container px-4 text-center">
+    <div class="row row-cols-1 row-cols-md-5 g-4">
+
+{% for workhour in workhours %}
+
+    <div class="col">
+        <div class="card text-bg-light mb-3" style="max-width: 18rem;">
+            <div class="card-header">{{ workhour.date }}</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ workhour.teacher.first_name|capfirst }} {{ workhour.teacher.last_name|capfirst }}</h5>
+                <p class="card-text">
+                    {% if request.user == workhour.teacher %}
+                        <a href="{% url 'work_hours:update_work_hours' workhour.school.slug workhour.date %}">
+                            Урок № {{ workhour.lesson.number }}<br>{{ workhour.lesson }}
+                        </a>
+                    {% endif %}
+                </p>
+                <p class="card-text">
+                    Предмет: {{ workhour.subject }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+{% endfor %}
+    </div>
+</div>
+
+{% endblock content %}

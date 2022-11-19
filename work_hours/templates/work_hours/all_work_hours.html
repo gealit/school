@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{#{% load widget_tweaks %}#}
+
+{% block content %}
+    <br>
+    <div class="container px-4 text-center">
+        <h3>Here you can see all events from all teachers.</h3>
+
+        <form method="get" class="d-flex" role="search">
+            {{ filter.form.date }}
+            {{ filter.form.teacher }}
+            {{ filter.form.school }}
+            <button class="btn btn-outline-success" type="submit">Фильтровать</button>
+        </form>
+    </div>
+    <br>
+
+<div class="container px-4 text-center">
+    <div class="row row-cols-1 row-cols-md-5 g-4">
+
+{% for item in filter.qs %}
+    <div class="col">
+        <div class="card text-bg-light mb-3" style="max-width: 18rem;">
+            <div class="card-header">Date: {{ item.date }}</div>
+            <div class="card-body">
+                <h5 class="card-title">{{ item.teacher__first_name|capfirst }} {{ item.teacher__last_name|capfirst }}</h5>
+                <p class="card-text">
+                    {% if request.user.id == item.teacher %}
+                        <a href="{% url 'update_event' item.school__slug item.date %}">
+                            Amount of lessons: {{ item.dcount }}
+                        </a>
+                    {% else %}
+                        Amount of lessons: {{ item.dcount }}
+                    {% endif %}
+                </p>
+                <p class="card-text">
+                    School: {{ item.school__name }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+{% endfor %}
+    </div>
+</div>
+
+{% endblock content %}

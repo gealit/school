@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h3>Обновление информации: {{ date|date:'l d F Y' }}</h3>
+    <h3>Школа: {{ school }}</h3>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+{#    {% for item in form %}#}
+{#        {% for field in item %}#}
+{#            {% if field.label == 'Школа' or field.label == 'Id'%}#}
+{#            {% else %}#}
+{#            {{ field.label }}#}
+{#            <p>{{ field }}</p>#}
+{#            {% endif %}#}
+{#        {% endfor %}#}
+{#        <hr>#}
+{#    {% endfor %}#}
+    <button type="submit" class="btn btn-secondary">Обновить день</button>
+</form>
+
+{% endblock content %}

@@ -1,20 +1,6 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="nav nav-pills nav-justified">
-        <a class="nav-link" href="{% url 'account:register_accountant' %}">
-            <p class="nav-item"><button type="button" class="btn btn-secondary btn-lg">Создать Бухгалтера</button></p>
-        </a>
-
-        <a class="nav-link" href="{% url 'account:register_teacher' %}">
-            <p class="nav-item"><button type="button" class="btn btn-secondary btn-lg">Создать Преподавателя</button></p>
-        </a>
-
-        <a class="nav-link" href="{% url 'account:register_admin' %}">
-            <p class="nav-item"><button type="button" class="btn btn-secondary btn-lg">Создать Администратора</button></p>
-        </a>
-    </div>
-
 <div class="accordion" id="accordionPanelsStayOpenExample">
 {% for user in admins %}
         <div class="accordion-item">

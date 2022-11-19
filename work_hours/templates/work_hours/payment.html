@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container px-4 text-center">
+        <form method="get" class="d-flex" role="search">
+            {{ work_hours.form.date }}
+            {{ work_hours.form.teacher }}
+            {{ work_hours.form.school }}
+            <button class="btn btn-outline-success" type="submit">Фильтровать</button>
+        </form>
+    </div>
+
+{% for item in work_hours.qs %}
+Date: {{ item.date }} - {{ item.school }} - {{ item.subject }} -
+    {{ item.lesson }} - {{ item.teacher.get_full_name|capfirst }}
+    {% if item.paid %}
+        --- Оплачено: {{ item.paid_data }} - {{ item.paid_user }}
+    {% endif %}
+<br>
+{% endfor %}
+    <form method="POST">{% csrf_token %}<button class="" type="submit">Оплатить</button></form>
+
+{% endblock content %}

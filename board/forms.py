@@ -1,6 +1,7 @@
 from django import forms
 
 from board.models import BoardNews, CommentMessage
+forms.Textarea()
 
 
 class BoardNewsCreateForm(forms.ModelForm):
@@ -15,9 +16,13 @@ class BoardNewsCreateForm(forms.ModelForm):
 
 
 class AddCommentForm(forms.ModelForm):
-    text = forms.CharField(widget=forms.Textarea(
-        attrs={'class': 'form-control', 'placeholder': 'Введите текст комментария...', 'rows': 5, 'cols': 40}
-    ))
+    def __init__(self, *args, **kwargs):
+        super(AddCommentForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'
+            visible.field.widget.attrs['placeholder'] = 'Введите текст комментария...'
+            visible.field.widget.attrs['rows'] = 5
+            visible.field.widget.attrs['cols'] = 40
 
     class Meta:
         model = CommentMessage

@@ -14,11 +14,61 @@
         <li class="nav-item">
           <a class="nav-link {% if 'board_create' in request.path %}active{% endif %}" href="{% url 'board:board_create' %}">Добавить пост</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link {% if 'user' in request.path %}active{% endif %}" href="{% url 'account:users_list' %}">Пользователи</a>
+        {% if request.user.role == 'ACCOUNTANT' %}
+        <li class="nav-item dropdown">
+          <a class="nav-link {% if 'payment/all' in request.path %}active{% endif %} dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Рабочие часы
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'work_hours:payment_all' %}">Все рабочие часы</a></li>
+            <li><a class="dropdown-item" href="{% url 'work_hours:payment_all' %}">Оплаченные рабочие часы</a></li>
+            <li><a class="dropdown-item" href="{% url 'work_hours:payment_all' %}">Не оплаченные рабочие часы</a></li>
+
+          </ul>
+        </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/payment/' %}active{% endif %}" href="{% url 'work_hours:payment' %}">Оплата</a>
+          </li>
+        {% endif %}
+        {% if request.user.role == 'TEACHER' %}
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/choose_school/' %}active{% endif %}" href="{% url 'work_hours:choose_school' %}">Выберите школу</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.path == '/personal_page/' %}active{% endif %}" href="{% url 'work_hours:personal_page' %}">Личный кабинет</a>
+          </li>
+        {% endif %}
+
+        {% if request.user.is_superuser %}
+        <li class="nav-item dropdown">
+          <a class="nav-link {% if 'user' in request.path %}active{% endif %} dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Пользователи
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'account:users_list' %}">Все пользователи</a></li>
+            <li><a class="dropdown-item" href="{% url 'account:users_list' %}">Администраторы</a></li>
+            <li><a class="dropdown-item" href="{% url 'account:users_list' %}">Бухгалтеры</a></li>
+            <li><a class="dropdown-item" href="{% url 'account:users_list' %}">Учителя</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'account:register_admin' %}">Добавить Администратора</a></li>
+            <li><a class="dropdown-item" href="{% url 'account:register_accountant' %}">Добавить Бухгалтера</a></li>
+            <li><a class="dropdown-item" href="{% url 'account:register_teacher' %}">Добавить Учителя</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link {% if 'subject' in request.path %}active{% endif %} dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Школы/Предметы
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'subjects' %}">Школы</a></li>
+            <li><a class="dropdown-item" href="{% url 'subjects' %}">Предметы</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'subjects' %}">Добавить Школу</a></li>
+            <li><a class="dropdown-item" href="{% url 'subjects' %}">Добавить Предмет</a></li>
+          </ul>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% if 'subject' in request.path %}active{% endif %}" href="{% url 'subjects' %}">Предметы</a>
+          <a class="nav-link {% if 'all_work_hours' in request.path %}active{% endif %}" href="{% url 'work_hours:all_work_hours' %}">Все рабочие часы</a>
         </li>
         {% if 'post_detail' in request.path %}
             <li class="nav-item">
@@ -27,6 +77,8 @@
         {% endif %}
         {% endif %}
       </ul>
+      {% endif %}
+
       {% if request.user.is_authenticated %}
       <ul class="navbar-nav">
         Добро пожаловать!

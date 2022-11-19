@@ -10,7 +10,7 @@ from accounts.models import Admin, Accountant, Teacher, Subject
 class AdminConfig(UserAdmin):
     search_fields = ('email', 'username',)
     ordering = ('last_name',)
-    list_display = ('username', 'get_full_name', 'role')
+    list_display = ('username', 'get_full_name', 'role', 'id')
 
     fieldsets = (
         (None, {'fields': ('username', 'email', 'first_name', 'last_name', 'password')}),
@@ -26,10 +26,11 @@ class AdminConfig(UserAdmin):
 @admin.register(Accountant)
 class AccountantConfig(UserAdmin):
     ordering = ('last_name',)
-    list_display = ('username', 'get_full_name', 'role')
+    list_display = ('username', 'get_full_name', 'role', 'id')
 
     fieldsets = (
         (None, {'fields': ('username', 'email', 'first_name', 'last_name', 'password', 'is_staff')}),
+        (_('Permissions'), {'fields': ('groups', 'user_permissions',)}),
         (_('Personal'), {'fields': ('description',)}),
     )
 

@@ -6,12 +6,15 @@ from django.conf import settings
 
 from accounts.views import LoginPage, SubjectListView, SubjectCreateView
 
+
 admin.site.site_header = f"Администрирование {settings.COMPANY}"
 admin.site.site_title = f"Администрирование {settings.COMPANY}"
 admin.site.index_title = f"Добро пожаловать на сервис {settings.COMPANY}"
 
 urlpatterns = [
     path('', include('board.urls', namespace='board')),
+    path('', include('work_hours.urls', namespace='work_hours')),
+    path('', include('schedule.urls')),
     path('user/', include('accounts.urls', namespace='account')),
     path('admin/', admin.site.urls),
     path('login/', LoginPage.as_view(), name='login'),
